@@ -19,6 +19,10 @@ THESE CHANGES ARE PLANNED FOR THE NEAR-FUTURE:
 - 3D models
   - I wanna use assimp for this this time
 - Decent OpenGL3 
+- Extendable editor
+  - I want engine tools to be add-ons. You only start with a terminal and a viewport.
+- My own GUI system
+- Level editor (with gizmos)
 
 ========================================================================
 
