@@ -1,0 +1,25 @@
+THIS IS THE TODO FILE:
+The project will be a game engine.
+
+========================================================================
+THESE CHANGES ARE PLANNED FOR THE NEAR-FUTURE:
+========================================================================
+- Hotloading
+  - Having hotloading built in from the start will be useful because I wont have to quit the application every time.
+- Input system
+  - A decent input system would be very useful. Perhaps just a function call that evaluates an enum
+  - is_down(List of Keys)
+  - on_keys_down(List of Keys, delegate)
+  - on_keys_up(List of Keys, delegate)
+- Window resizing
+  - And having this work with multiple viewports
+- Textures
+- Fonts
+- Audio
+- 3D models
+  - I wanna use assimp for this this time
+- Decent OpenGL3 
+
+========================================================================
+
+The application will be written in a way where nothing will happen if the user doesn't interact with the application.
