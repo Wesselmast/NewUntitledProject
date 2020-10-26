@@ -27,3 +27,13 @@ THESE CHANGES ARE PLANNED FOR THE NEAR-FUTURE:
 ========================================================================
 
 The application will be written in a way where nothing will happen if the user doesn't interact with the application.
+
+========================================================================
+
+Roadmap:
+> Input system
+> Resizing viewports with mouse input
+> font support
+> terminal in viewport
+> hotloading
+> start working on the renderer

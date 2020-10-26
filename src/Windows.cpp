@@ -49,7 +49,6 @@ LRESULT CALLBACK window_proc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam
   switch(msg) {
     case WM_PAINT: {
       display_viewports();
-      rotation += 1.0f;
       BeginPaint(window, &paint);
       EndPaint(window, &paint);
       return PROC_DEFAULT;
@@ -57,8 +56,23 @@ LRESULT CALLBACK window_proc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam
     case WM_SIZE: {
       w = LOWORD(lParam);
       h = HIWORD(lParam);
-      PostMessage(window, WM_PAINT, 0, 0);
       return PROC_DEFAULT;  
+    }
+    case WM_LBUTTONDOWN: { set_key_state(MOUSE_L, 1); return PROC_DEFAULT; }
+    case WM_MBUTTONDOWN: { set_key_state(MOUSE_M, 1); return PROC_DEFAULT; }
+    case WM_RBUTTONDOWN: { set_key_state(MOUSE_R, 1); return PROC_DEFAULT; }
+
+    case WM_LBUTTONUP:   { set_key_state(MOUSE_L, 0); return PROC_DEFAULT; }
+    case WM_MBUTTONUP:   { set_key_state(MOUSE_M, 0); return PROC_DEFAULT; }
+    case WM_RBUTTONUP:   { set_key_state(MOUSE_R, 0); return PROC_DEFAULT; }
+
+    case WM_SYSKEYDOWN:
+    case WM_SYSKEYUP:
+    case WM_KEYDOWN:
+    case WM_KEYUP: {   
+      int isDown = !((lParam & (1 << 31)) != 0);
+      set_key_state(wParam, isDown);
+      return PROC_DEFAULT;
     }
     case WM_DESTROY: {
       PostQuitMessage(0);
@@ -72,7 +86,7 @@ LRESULT CALLBACK window_proc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam
   return PROC_DEFAULT;
 }
 
-void create_and_show_window(HINSTANCE hInstance, int nCmdShow) {
+HWND create_and_show_window(HINSTANCE hInstance, int nCmdShow) {
   const char* className = "CustomFloatingWindow";
 
   WNDCLASS windowClass = {};
@@ -93,7 +107,7 @@ void create_and_show_window(HINSTANCE hInstance, int nCmdShow) {
       hInstance,
       0
       );
-  if(!window) return;
+  if(!window) return nullptr;
 
   HDC hdc = GetDC(window);
 
@@ -106,12 +120,14 @@ void create_and_show_window(HINSTANCE hInstance, int nCmdShow) {
   pfd.cColorBits = 32;
 
   int pf = ChoosePixelFormat(hdc, &pfd);
-  if(!pf) return;
-  if(SetPixelFormat(hdc, pf, &pfd) == FALSE) return;
+  if(!pf) return nullptr;
+  if(SetPixelFormat(hdc, pf, &pfd) == FALSE) return nullptr;
   DescribePixelFormat(hdc, pf, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
   
   HGLRC hrc = wglCreateContext(hdc);
   wglMakeCurrent(hdc, hrc);
 
   ShowWindow(window, nCmdShow);
+  
+  return window;
 }
