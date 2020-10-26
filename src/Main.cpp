@@ -30,10 +30,8 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int 
   register_key_down(KEY_H, &h_pressed_down);
   
   fptr_wglSwapIntervalEXT* wglSwapInterval = (fptr_wglSwapIntervalEXT*)wglGetProcAddress("wglSwapIntervalEXT");
-  if(wglSwapInterval) {
-    wglSwapInterval(1);
-  }
-  
+  if(!wglSwapInterval) return 0; //add assert
+
   std::chrono::high_resolution_clock timer;
   double time = 0.0;
   double dt = 0.015;
@@ -53,17 +51,15 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int 
     rotation += rotate * dt * speed;
     PostMessage(window, WM_PAINT, 0, 0);
     
-    if(wglSwapInterval) {
-      wglSwapInterval(1);
-    }     
-
+    wglSwapInterval(1);
+    
     dt = std::chrono::duration<double>(timer.now() - start).count();
     time += dt;
   }
 
 quit:
- unregister_key_down(KEY_L, &l_pressed_down);
- unregister_key_down(KEY_H, &h_pressed_down);
- printf("QUIT!");
+  unregister_key_down(KEY_L, &l_pressed_down);
+  unregister_key_down(KEY_H, &h_pressed_down);
+  printf("QUIT!");
   return 0;
 }

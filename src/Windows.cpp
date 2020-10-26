@@ -10,16 +10,14 @@ static int w = 1920;
 static int h = 1080;
 
 static float leftPercent = 0.5f;
+static float rotation = 0.0f;
 
-void show_triangle() {
-
+void show_triangle(float r, float g, float b) {
   glBegin(GL_TRIANGLES);
-  glColor3f(1.0f, 0.0f, 0.2f);
-  glVertex2i(0,  1);
-  glColor3f(0.0f, 0.2f, 1.0f);
+  glColor3f(r, g, b);
+  glVertex2i( 0,  1);
   glVertex2i(-1, -1);
-  glColor3f(0.0f, 0.2f, 1.0f);
-  glVertex2i(1, -1);
+  glVertex2i( 1, -1);
   glEnd();
 
   glLoadIdentity();
@@ -33,8 +31,6 @@ void show_triangle() {
   glEnd();
 }
 
-static float rotation = 0.0f;
-
 void display_viewports() {
   glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
@@ -42,16 +38,16 @@ void display_viewports() {
   glViewport(0, 0, w * leftPercent, h);
   glLoadIdentity();
   glRotatef(rotation, 0.0f, 0.0f, 1.0f);
-  show_triangle();
+  show_triangle(0.8f, 0.1f, 0.1f);
 
   glViewport(w * leftPercent, 0, w * (1.0f - leftPercent), h/2);
   glLoadIdentity();
   glRotatef(-rotation, 0.0f, 0.0f, 1.0f);
-  show_triangle();
+  show_triangle(0.1f, 0.8f, 0.1f);
 
   glViewport(w * leftPercent, h/2, w * (1.0f - leftPercent), h/2);
   glLoadIdentity();
-  show_triangle();
+  show_triangle(0.1f, 0.1f, 0.8f);
 
   glFlush();
 }
@@ -71,10 +67,10 @@ LRESULT CALLBACK window_proc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam
       h = HIWORD(lParam);
       return PROC_DEFAULT;  
     }
+    
     case WM_LBUTTONDOWN: { set_key_state(MOUSE_L, 1); return PROC_DEFAULT; }
     case WM_MBUTTONDOWN: { set_key_state(MOUSE_M, 1); return PROC_DEFAULT; }
     case WM_RBUTTONDOWN: { set_key_state(MOUSE_R, 1); return PROC_DEFAULT; }
-
     case WM_LBUTTONUP:   { set_key_state(MOUSE_L, 0); return PROC_DEFAULT; }
     case WM_MBUTTONUP:   { set_key_state(MOUSE_M, 0); return PROC_DEFAULT; }
     case WM_RBUTTONUP:   { set_key_state(MOUSE_R, 0); return PROC_DEFAULT; }
