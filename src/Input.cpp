@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vector>
+#include <algorithm>
+
 enum {
   MOUSE_L = 0x01,
   MOUSE_R = 0x02,
@@ -56,7 +59,51 @@ enum {
   KEY_Z 	= 0x5A,
 };
 
-static bool input[128];
+typedef void (*fptr_keyevent)();
+
+const int maxKeyCode = 0x5B;
+
+static bool input[maxKeyCode];
+static bool eventFlags[maxKeyCode];
+static std::vector<fptr_keyevent> keyDownEvents[maxKeyCode];
+static std::vector<fptr_keyevent> keyUpEvents[maxKeyCode];
+
+void register_key_down(int key, fptr_keyevent event) {
+  keyDownEvents[key].push_back(event);
+}
+
+void register_key_up(int key, fptr_keyevent event) {
+  keyUpEvents[key].push_back(event);
+}
+
+void unregister_key_down(int key, fptr_keyevent event) {
+  keyDownEvents[key].erase(std::remove(
+	keyDownEvents[key].begin(), 
+	keyDownEvents[key].end(), 
+	event
+	), keyDownEvents[key].end());
+}
+
+void unregister_key_up(int key, fptr_keyevent event) {
+  keyUpEvents[key].erase(std::remove(
+	keyUpEvents[key].begin(), 
+	keyUpEvents[key].end(), 
+	event
+	), keyUpEvents[key].end());
+}
+
+void tick_input() {
+  for(int key = 0; key < maxKeyCode; ++key) {
+    if(input[key] && !eventFlags[key]) {
+     eventFlags[key] = 1;
+     for(auto& event : keyDownEvents[key]) event();
+    }
+    if(!input[key] && eventFlags[key]) {
+     eventFlags[key] = 0;
+     for(auto& event : keyUpEvents[key]) event();
+    }
+  }
+}
 
 void set_key_state(int key, bool isDown) {
   input[key] = isDown;

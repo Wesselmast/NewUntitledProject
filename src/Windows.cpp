@@ -9,6 +9,8 @@
 static int w = 1920;
 static int h = 1080;
 
+static float leftPercent = 0.5f;
+
 void show_triangle() {
   glBegin(GL_TRIANGLES);
   glColor3f(1.0f, 0.0f, 0.2f);
@@ -26,17 +28,17 @@ void display_viewports() {
   glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
   
-  glViewport(0, 0, w/2, h);
+  glViewport(0, 0, w * leftPercent, h);
   glLoadIdentity();
   glRotatef(rotation, 0.0f, 0.0f, 1.0f);
   show_triangle();
 
-  glViewport(w/2, 0, w/2, h/2);
+  glViewport(w * leftPercent, 0, w * (1.0f - leftPercent), h/2);
   glLoadIdentity();
   glRotatef(-rotation, 0.0f, 0.0f, 1.0f);
   show_triangle();
 
-  glViewport(w/2, h/2, w/2, h/2);
+  glViewport(w * leftPercent, h/2, w * (1.0f - leftPercent), h/2);
   glLoadIdentity();
   show_triangle();
 
