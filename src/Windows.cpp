@@ -12,6 +12,7 @@ static int h = 1080;
 static float leftPercent = 0.5f;
 
 void show_triangle() {
+
   glBegin(GL_TRIANGLES);
   glColor3f(1.0f, 0.0f, 0.2f);
   glVertex2i(0,  1);
@@ -19,6 +20,16 @@ void show_triangle() {
   glVertex2i(-1, -1);
   glColor3f(0.0f, 0.2f, 1.0f);
   glVertex2i(1, -1);
+  glEnd();
+
+  glLoadIdentity();
+  glLineWidth(4.0f);
+  glBegin(GL_LINE_LOOP);
+  glColor3f(0.8f, 0.8f, 0.8f);
+  glVertex2i(-1,  1);
+  glVertex2i(-1, -1);
+  glVertex2i( 1, -1);
+  glVertex2i( 1,  1);
   glEnd();
 }
 
