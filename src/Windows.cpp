@@ -1,63 +1,21 @@
 #pragma once
 
 #include <windows.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
+#include "OpenGL.cpp"
 
 #define PROC_DEFAULT DefWindowProc(window, msg, wParam, lParam);
 
 static int w = 1920;
 static int h = 1080;
-
 static float leftPercent = 0.5f;
 static float rotation = 0.0f;
-
-void show_triangle(float r, float g, float b) {
-  glBegin(GL_TRIANGLES);
-  glColor3f(r, g, b);
-  glVertex2i( 0,  1);
-  glVertex2i(-1, -1);
-  glVertex2i( 1, -1);
-  glEnd();
-
-  glLoadIdentity();
-  glLineWidth(4.0f);
-  glBegin(GL_LINE_LOOP);
-  glColor3f(0.8f, 0.8f, 0.8f);
-  glVertex2i(-1,  1);
-  glVertex2i(-1, -1);
-  glVertex2i( 1, -1);
-  glVertex2i( 1,  1);
-  glEnd();
-}
-
-void display_viewports() {
-  glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT);
-  
-  glViewport(0, 0, w * leftPercent, h);
-  glLoadIdentity();
-  glRotatef(rotation, 0.0f, 0.0f, 1.0f);
-  show_triangle(0.8f, 0.1f, 0.1f);
-
-  glViewport(w * leftPercent, 0, w * (1.0f - leftPercent), h/2);
-  glLoadIdentity();
-  glRotatef(-rotation, 0.0f, 0.0f, 1.0f);
-  show_triangle(0.1f, 0.8f, 0.1f);
-
-  glViewport(w * leftPercent, h/2, w * (1.0f - leftPercent), h/2);
-  glLoadIdentity();
-  show_triangle(0.1f, 0.1f, 0.8f);
-
-  glFlush();
-}
 
 LRESULT CALLBACK window_proc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam) {
   static PAINTSTRUCT paint;
 
   switch(msg) {
     case WM_PAINT: {
-      display_viewports();
+      display_viewports(w, h, leftPercent, rotation);
       BeginPaint(window, &paint);
       EndPaint(window, &paint);
       return PROC_DEFAULT;
