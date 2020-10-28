@@ -1,9 +1,13 @@
 #include <stdio.h>
+#include <string.h>
 #include <cstdint>
 #include <chrono>
 
 typedef uint32_t uint32;
 
+void full_path(char* buffer, const char* fileName);
+
+#include "File.cpp"
 #include "Input.cpp"
 #include "Windows.cpp"
 
@@ -36,6 +40,8 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int 
   double time = 0.0;
   double dt = 0.015;
   float speed = 50.0f;
+  
+  opengl_init();
   
   while(true) {
     auto start = timer.now();

@@ -3,6 +3,15 @@
 #include <windows.h>
 #include "OpenGL.cpp"
 
+void full_path(char* buffer, const char* fileName) {
+  char dirPath[512];
+  GetCurrentDirectoryA(512, dirPath);
+  strcpy(buffer, dirPath);
+  strcat(buffer, "\\");
+  strcat(buffer, fileName);
+  strcat(buffer, "\0");
+}
+
 #define PROC_DEFAULT DefWindowProc(window, msg, wParam, lParam);
 
 static int w = 1920;
