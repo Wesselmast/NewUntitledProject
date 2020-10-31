@@ -6,15 +6,16 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
 struct Object {
   uint32 vertexBuffer;
+  uint32 vertexArray;
   uint32 program;
 };
 
+#include "Text.cpp"
+
 static Object triangle;
+static Object text;
 
 uint32 load_shaders(const char* vertexPath, const char* fragmentPath) {
   uint32 vertexShader   = glCreateShader(GL_VERTEX_SHADER);
@@ -73,21 +74,35 @@ void opengl_init() {
     printf("glew is bogged!");
   }
 
-  triangle.program = load_shaders("res/shaders/defaultV.shader", "res/shaders/defaultF.shader"); 
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  
+  text_init();
 
-  uint32 vertexArray;
-  glGenVertexArrays(1, &vertexArray);
-  glBindVertexArray(vertexArray); 
+  //triangle.program = load_shaders("res/shaders/defaultV.shader", "res/shaders/defaultF.shader"); 
+  
 
-  const float vertices[] = {
-    -1.0f, -1.0f, 0.0f,
-     1.0f, -1.0f, 0.0f,
-     0.0f,  1.0f, 0.0f,
-  };
+  text.program = load_shaders("res/shaders/textV.shader", "res/shaders/textF.shader");
+  
+  glGenVertexArrays(1, &text.vertexArray);
+  glGenBuffers(1, &text.vertexBuffer);
+  glBindVertexArray(text.vertexArray); 
+  glBindBuffer(GL_ARRAY_BUFFER, text.vertexBuffer);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, 0, GL_DYNAMIC_DRAW);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
 
-  glGenBuffers(1, &triangle.vertexBuffer);
-  glBindBuffer(GL_ARRAY_BUFFER, triangle.vertexBuffer);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+ // const float vertices[] = {
+ //   -1.0f, -1.0f, 0.0f,
+ //    1.0f, -1.0f, 0.0f,
+ //    0.0f,  1.0f, 0.0f,
+ // };
+
+ // glGenBuffers(1, &triangle.vertexBuffer);
+ // glBindBuffer(GL_ARRAY_BUFFER, triangle.vertexBuffer);
+ // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 }
 
 void show_triangle(float r, float g, float b) {
@@ -121,18 +136,21 @@ void display_viewports(int w, int h, float leftPercent, float rotation) {
   glViewport(0, 0, w * leftPercent, h);
   glLoadIdentity();
   glRotatef(rotation, 0.0f, 0.0f, 1.0f);
-  show_triangle(0.8f, 0.1f, 0.1f);
+  //show_triangle(0.8f, 0.1f, 0.1f);
+  render_text(&text, "First", 0.0f, 0.0f, 0.0, 0.2f, 1.0f);
   viewport_border();
 
   glViewport(w * leftPercent, 0, w * (1.0f - leftPercent), h/2);
   glLoadIdentity();
   glRotatef(-rotation, 0.0f, 0.0f, 1.0f);
-  show_triangle(0.1f, 0.8f, 0.1f);
+  //show_triangle(0.1f, 0.8f, 0.1f);
+  render_text(&text, "Second", 0.0f, 0.0f, 1.0f, 0.0f, 0.2f);
   viewport_border();
 
   glViewport(w * leftPercent, h/2, w * (1.0f - leftPercent), h/2);
   glLoadIdentity();
-  show_triangle(0.1f, 0.1f, 0.8f);
+  //show_triangle(0.1f, 0.1f, 0.8f);
+  render_text(&text, "Third", 0.0f, 0.0f, 0.2f, 1.0f, 0.0f);
   viewport_border();
 
   glFlush();
