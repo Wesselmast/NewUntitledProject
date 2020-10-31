@@ -7,4 +7,6 @@ set libraries=-lopengl32 -luser32 -lgdi32 -lfreetype.lib -lglew32s
 
 call duration -c clang++ .\src\Main.cpp %compile_flags% %include_paths% -o .\int\Main.o
 call duration -l clang++ -o .\bin\Main.exe .\int\Main.o -Wl %linker_paths% %libraries%
+
+robocopy .\res .\bin\res /E /NFL /NDL /NJH /NJS
 exit

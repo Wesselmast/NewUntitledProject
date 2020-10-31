@@ -1,3 +1,3 @@
 @echo off
-call bin\Main.exe
+start bin\Main.exe
 exit
