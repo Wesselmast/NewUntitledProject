@@ -53,8 +53,6 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int 
 
     tick_input();
 
-    bool rotate = (is_down(KEY_ALT) && is_down(MOUSE_L));
-    rotation += rotate * dt * speed;
     PostMessage(window, WM_PAINT, 0, 0);
     
     wglSwapInterval(1);

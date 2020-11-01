@@ -14,17 +14,16 @@ void full_path(char* buffer, const char* fileName) {
 
 #define PROC_DEFAULT DefWindowProc(window, msg, wParam, lParam);
 
-static int w = 1920;
-static int h = 1080;
+static int w = 1280;
+static int h = 720;
 static float leftPercent = 0.5f;
-static float rotation = 0.0f;
 
 LRESULT CALLBACK window_proc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam) {
   static PAINTSTRUCT paint;
 
   switch(msg) {
     case WM_PAINT: {
-      display_viewports(w, h, leftPercent, rotation);
+      display_viewports(w, h, leftPercent);
       BeginPaint(window, &paint);
       EndPaint(window, &paint);
       return PROC_DEFAULT;
@@ -77,7 +76,7 @@ HWND create_and_show_window(HINSTANCE hInstance, int nCmdShow) {
       className,
       "VimTest",
       WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 
+      CW_USEDEFAULT, CW_USEDEFAULT, w, h, 
       0,
       0,
       hInstance,

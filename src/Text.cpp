@@ -15,14 +15,16 @@ static struct Characters {
   uint32 advance[128];
 } characters;
 
-void render_text(Object* object, const char* text, float x, float y, float r, float g, float b) {
+void render_text(Object* object, const char* text, float x, float y, float r, float g, float b, const glm::mat4& ortho) {
   glUseProgram(object->program);
 
   glUniform3f(glGetUniformLocation(object->program, "textColor"), r, g, b);
+  glUniformMatrix4fv(glGetUniformLocation(object->program, "projection"), 1, GL_FALSE, glm::value_ptr(ortho));
+
   glActiveTexture(GL_TEXTURE0);
   glBindVertexArray(object->vertexArray);
 
-  float scale = 0.005f;
+  float scale = 1.0f;
 
   for(uint32 i = 0; i < strlen(text); i++) {
     uint32& texture = characters.textureID[text[i]];   
@@ -55,12 +57,10 @@ void render_text(Object* object, const char* text, float x, float y, float r, fl
     x += (advance >> 6) * scale;
   }
 
-
   glBindVertexArray(0);
   glBindTexture(GL_TEXTURE_2D, 0);
   glUseProgram(0); //could be optimised
   glDisableVertexAttribArray(0); //could be optimised
-
 }
 
 void load_font(const FT_Library& ft, const char* fontPath) {
@@ -74,7 +74,7 @@ void load_font(const FT_Library& ft, const char* fontPath) {
     return;
   }
 
-  FT_Set_Pixel_Sizes(face, 0, 48);
+  FT_Set_Pixel_Sizes(face, 0, 18);
 
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 

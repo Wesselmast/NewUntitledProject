@@ -6,6 +6,10 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 struct Object {
   uint32 vertexBuffer;
   uint32 vertexArray;
@@ -129,30 +133,32 @@ void viewport_border() {
   glEnd();
 }
 
-void display_viewports(int w, int h, float leftPercent, float rotation) {
+void create_viewport(float x, float y, float width, float height, glm::mat4& projection) {
+  glViewport(x, y, width, height);
+  projection = glm::ortho(0.0f, width, 0.0f, height); 
+}
+
+void display_viewports(int w, int h, float leftPercent) {
   glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
 
-  glViewport(0, 0, w * leftPercent, h);
-  glLoadIdentity();
-  glRotatef(rotation, 0.0f, 0.0f, 1.0f);
-  //show_triangle(0.8f, 0.1f, 0.1f);
-  render_text(&text, "First", 0.0f, 0.0f, 0.0, 0.2f, 1.0f);
-  viewport_border();
-
-  glViewport(w * leftPercent, 0, w * (1.0f - leftPercent), h/2);
-  glLoadIdentity();
-  glRotatef(-rotation, 0.0f, 0.0f, 1.0f);
-  //show_triangle(0.1f, 0.8f, 0.1f);
-  render_text(&text, "Second", 0.0f, 0.0f, 1.0f, 0.0f, 0.2f);
-  viewport_border();
-
-  glViewport(w * leftPercent, h/2, w * (1.0f - leftPercent), h/2);
-  glLoadIdentity();
-  //show_triangle(0.1f, 0.1f, 0.8f);
-  render_text(&text, "Third", 0.0f, 0.0f, 0.2f, 1.0f, 0.0f);
-  viewport_border();
-
+  glm::mat4 ortho;
+  {
+    create_viewport(0.0f, 0.0f, w * leftPercent, h, ortho);  
+    render_text(&text, "First", 0.0f, 0.0f, 0.0f, 0.2f, 1.0f, ortho);
+    viewport_border();
+  }
+  {
+    create_viewport(w * leftPercent, 0.0f, w * (1.0f - leftPercent), h * 0.5f, ortho);  
+    render_text(&text, "Second", 0.0f, 0.0f, 0.2f, 1.0f, 0.2f, ortho);
+    viewport_border();
+  }
+  {
+    create_viewport(w * leftPercent, h * 0.5f, w * (1.0f - leftPercent), h * 0.5f, ortho);  
+    render_text(&text, "Third", 0.0f, 0.0f, 1.0, 0.5f, 0.0f, ortho);
+    viewport_border();
+  }
+  
   glFlush();
 }
 
