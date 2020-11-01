@@ -52,7 +52,6 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int 
     }
 
     tick_input();
-
     PostMessage(window, WM_PAINT, 0, 0);
     
     wglSwapInterval(1);
