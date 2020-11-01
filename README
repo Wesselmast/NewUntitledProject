@@ -4,8 +4,8 @@ Dependencies:
 - clang++ (llvm)
   https://releases.llvm.org/download.html
 - opengl32
-  requires windows 10 sdk (10.0.17763.0)
+  requires windows 10 sdk (recommended: 10.0.17763.0)
 - user32
-  requires windows 10 sdk (10.0.17763.0)
+  requires windows 10 sdk (recommended: 10.0.17763.0)
 - gdi32
-  requires windows 10 sdk (10.0.17763.0)
+  requires windows 10 sdk (recommended: 10.0.17763.0)
